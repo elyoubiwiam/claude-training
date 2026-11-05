@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northside Volunteer Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="wrap">
+      <p class="eyebrow" id="charity">Northside Community Hub</p>
+      <h1>Volunteer dashboard</h1>
+      <p class="meta" id="meta">Loading data…</p>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <div class="alert" id="load-error" hidden></div>
+    <div class="alert" id="data-issues" hidden>
+      <strong>Some figures in the data file don't agree.</strong>
+      <ul id="data-issues-list"></ul>
+    </div>
+
+    <section aria-labelledby="h-headline">
+      <h2 id="h-headline" class="visually-hidden">Headline figures</h2>
+      <div class="headline">
+        <div class="card hero" id="hero"></div>
+        <div class="tiles" id="tiles"></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-demand">
+      <div class="card-head">
+        <h2 id="h-demand">Demand against volunteer hours</h2>
+        <p class="sub">Families helped and volunteer hours each month, both shown against June (June = 100).</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="chart" id="chart-demand"></div>
+        </div>
+        <div>
+          <h3>Volunteer hours per family</h3>
+          <div class="chart" id="chart-per-family"></div>
+        </div>
+      </div>
+      <div id="table-demand"></div>
+    </section>
+
+    <div class="two-col">
+      <section class="card" aria-labelledby="h-gaps">
+        <div class="card-head">
+          <h2 id="h-gaps">Volunteer gaps by task</h2>
+          <p class="sub" id="gaps-sub"></p>
+        </div>
+        <div id="chart-gaps"></div>
+        <div id="table-gaps"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-planner">
+        <div class="card-head">
+          <h2 id="h-planner">Planner: adding volunteers</h2>
+          <p class="sub">Hours per family is all volunteer hours in a month divided by the families helped that month.</p>
+        </div>
+        <form class="planner" id="planner" autocomplete="off">
+          <div class="field">
+            <label for="p-count">New volunteers</label>
+            <div class="range-row">
+              <input type="range" id="p-count-range" min="0" max="30" step="1" value="0" aria-label="New volunteers (slider)">
+              <input type="number" id="p-count" min="0" max="200" step="1" value="0" inputmode="numeric">
+            </div>
+          </div>
+          <div class="field">
+            <label for="p-hours">Hours each per month</label>
+            <input type="number" id="p-hours" min="0" max="200" step="0.5" inputmode="decimal">
+            <p class="hint" id="p-hours-hint"></p>
+            <div class="chips" id="p-hours-chips"></div>
+          </div>
+          <div class="field">
+            <label for="p-families">Families per month</label>
+            <input type="number" id="p-families" min="1" max="10000" step="1" inputmode="numeric">
+            <div class="chips" id="p-families-chips"></div>
+          </div>
+        </form>
+        <div class="planner-result" aria-live="polite">
+          <div class="plan-figure">
+            <span class="label">Hours per family with this plan</span>
+            <span class="value" id="p-result"></span>
+            <span class="delta" id="p-delta"></span>
+          </div>
+          <p class="plan-sentence" id="p-total"></p>
+          <div id="chart-plan"></div>
+          <p class="plan-sentence" id="p-needed"></p>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" aria-labelledby="h-tasks">
+      <div class="card-head">
+        <h2 id="h-tasks">Task tracker</h2>
+        <p class="sub" id="tasks-sub"></p>
+      </div>
+      <div class="filters">
+        <label>Programme
+          <select id="f-programme"><option value="">All programmes</option></select>
+        </label>
+        <label>Status
+          <select id="f-status"><option value="">All statuses</option></select>
+        </label>
+        <span class="filter-count" id="f-count" aria-live="polite"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table tasks">
+          <thead>
+            <tr>
+              <th scope="col">Task</th>
+              <th scope="col">Status</th>
+              <th scope="col">Progress</th>
+              <th scope="col">Deadline</th>
+              <th scope="col">Volunteers</th>
+              <th scope="col">Priority</th>
+            </tr>
+          </thead>
+          <tbody id="task-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="card" aria-labelledby="h-donations">
+        <div class="card-head">
+          <h2 id="h-donations">Donations</h2>
+          <p class="sub" id="donations-sub"></p>
+        </div>
+        <h3>By month</h3>
+        <div class="chart" id="chart-donations"></div>
+        <h3 id="sources-title"></h3>
+        <div id="chart-sources"></div>
+        <div id="table-donations"></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-noshows">
+        <div class="card-head">
+          <h2 id="h-noshows">No-shows</h2>
+          <p class="sub" id="noshows-sub"></p>
+        </div>
+        <h3>By month</h3>
+        <div class="chart" id="chart-noshows"></div>
+        <h3>Missed more than one shift in October</h3>
+        <ul class="repeat-list" id="repeat-list"></ul>
+        <div id="table-noshows"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="wrap footer">
+    <p id="footer-note"></p>
+  </footer>
+</body>
+</html>

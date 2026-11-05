@@ -1,0 +1,543 @@
+{
+  "note": "Fictional charity created for training. All names and figures are invented.",
+  "charity": "Northside Community Hub",
+  "period": "June to October 2026",
+  "as_of": "2026-11-05",
+  "hours_note": "Volunteer hours and task logged hours are for October 2026. Monthly figures cover June to October.",
+  "volunteers": [
+    {
+      "id": "V01",
+      "name": "Amina Shah",
+      "role": "Food bank lead",
+      "hours": 32,
+      "availability": "Weekdays",
+      "status": "Active"
+    },
+    {
+      "id": "V02",
+      "name": "Tom Briggs",
+      "role": "Driver",
+      "hours": 18,
+      "availability": "Weekends",
+      "status": "Active"
+    },
+    {
+      "id": "V03",
+      "name": "Priya Nair",
+      "role": "Tutor",
+      "hours": 12,
+      "availability": "Evenings",
+      "status": "Active"
+    },
+    {
+      "id": "V04",
+      "name": "Daniel Okafor",
+      "role": "Warehouse",
+      "hours": 24,
+      "availability": "Weekdays",
+      "status": "Active"
+    },
+    {
+      "id": "V05",
+      "name": "Sophie Martin",
+      "role": "Fundraising",
+      "hours": 6,
+      "availability": "Flexible",
+      "status": "Active"
+    },
+    {
+      "id": "V06",
+      "name": "Jake Wilson",
+      "role": "Driver",
+      "hours": 0,
+      "availability": "Weekends",
+      "status": "Inactive",
+      "last_active": "2026-08"
+    },
+    {
+      "id": "V07",
+      "name": "Fatima Zahra",
+      "role": "Admin",
+      "hours": 15,
+      "availability": "Weekdays",
+      "status": "Active"
+    },
+    {
+      "id": "V08",
+      "name": "Liam O'Connor",
+      "role": "Warehouse",
+      "hours": 9,
+      "availability": "Saturdays",
+      "status": "New",
+      "joined": "2026-10"
+    },
+    {
+      "id": "V09",
+      "name": "Grace Lee",
+      "role": "Befriending",
+      "hours": 10,
+      "availability": "Afternoons",
+      "status": "Active"
+    },
+    {
+      "id": "V10",
+      "name": "Mohammed Ali",
+      "role": "Driver",
+      "hours": 21,
+      "availability": "Weekdays",
+      "status": "Active"
+    },
+    {
+      "id": "V11",
+      "name": "Chloe Evans",
+      "role": "Tutor",
+      "hours": 4,
+      "availability": "Evenings",
+      "status": "New",
+      "joined": "2026-10"
+    },
+    {
+      "id": "V12",
+      "name": "Ben Carter",
+      "role": "Events",
+      "hours": 0,
+      "availability": "Flexible",
+      "status": "Inactive",
+      "last_active": "2026-07"
+    },
+    {
+      "id": "V13",
+      "name": "Hana Kim",
+      "role": "Befriending",
+      "hours": 8,
+      "availability": "Weekends",
+      "status": "Active"
+    },
+    {
+      "id": "V14",
+      "name": "Ruth Adeyemi",
+      "role": "Food bank",
+      "hours": 28,
+      "availability": "Weekdays",
+      "status": "Active"
+    },
+    {
+      "id": "V15",
+      "name": "Sam Patel",
+      "role": "IT",
+      "hours": 3,
+      "availability": "Remote",
+      "status": "Active"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "task": "Weekly food parcel packing",
+      "programme": "Food bank",
+      "needed": 8,
+      "assigned": 4,
+      "volunteers": [
+        {
+          "id": "V01",
+          "hours": 20
+        },
+        {
+          "id": "V14",
+          "hours": 28
+        },
+        {
+          "id": "V04",
+          "hours": 6
+        },
+        {
+          "id": "V08",
+          "hours": 3
+        }
+      ],
+      "est_hours": 160,
+      "logged_hours": 57,
+      "completion": 36,
+      "deadline": "31 Oct",
+      "deadline_date": "2026-10-31",
+      "status": "Overdue",
+      "priority": "High"
+    },
+    {
+      "id": "T02",
+      "task": "Home deliveries",
+      "programme": "Food bank",
+      "needed": 4,
+      "assigned": 2,
+      "volunteers": [
+        {
+          "id": "V02",
+          "hours": 18
+        },
+        {
+          "id": "V10",
+          "hours": 21
+        }
+      ],
+      "est_hours": 80,
+      "logged_hours": 39,
+      "completion": 49,
+      "deadline": "31 Oct",
+      "deadline_date": "2026-10-31",
+      "status": "Overdue",
+      "priority": "High"
+    },
+    {
+      "id": "T03",
+      "task": "Warehouse stock check",
+      "programme": "Food bank",
+      "needed": 3,
+      "assigned": 2,
+      "volunteers": [
+        {
+          "id": "V04",
+          "hours": 18
+        },
+        {
+          "id": "V08",
+          "hours": 6
+        }
+      ],
+      "est_hours": 24,
+      "logged_hours": 24,
+      "completion": 100,
+      "deadline": "25 Oct",
+      "deadline_date": "2026-10-25",
+      "status": "Done",
+      "priority": "Medium"
+    },
+    {
+      "id": "T04",
+      "task": "After-school homework club",
+      "programme": "Education",
+      "needed": 4,
+      "assigned": 2,
+      "volunteers": [
+        {
+          "id": "V03",
+          "hours": 12
+        },
+        {
+          "id": "V11",
+          "hours": 4
+        }
+      ],
+      "est_hours": 40,
+      "logged_hours": 16,
+      "completion": 40,
+      "deadline": "31 Oct",
+      "deadline_date": "2026-10-31",
+      "status": "Overdue",
+      "priority": "High"
+    },
+    {
+      "id": "T05",
+      "task": "Elderly befriending calls",
+      "programme": "Befriending",
+      "needed": 5,
+      "assigned": 2,
+      "volunteers": [
+        {
+          "id": "V09",
+          "hours": 10
+        },
+        {
+          "id": "V13",
+          "hours": 8
+        }
+      ],
+      "est_hours": 30,
+      "logged_hours": 18,
+      "completion": 60,
+      "deadline": "31 Oct",
+      "deadline_date": "2026-10-31",
+      "status": "Overdue",
+      "priority": "Medium"
+    },
+    {
+      "id": "T06",
+      "task": "Christmas appeal campaign",
+      "programme": "Fundraising",
+      "needed": 3,
+      "assigned": 1,
+      "volunteers": [
+        {
+          "id": "V05",
+          "hours": 6
+        }
+      ],
+      "est_hours": 45,
+      "logged_hours": 6,
+      "completion": 13,
+      "deadline": "30 Nov",
+      "deadline_date": "2026-11-30",
+      "status": "At risk",
+      "priority": "High"
+    },
+    {
+      "id": "T07",
+      "task": "Volunteer rota update",
+      "programme": "Admin",
+      "needed": 1,
+      "assigned": 1,
+      "volunteers": [
+        {
+          "id": "V07",
+          "hours": 8
+        }
+      ],
+      "est_hours": 10,
+      "logged_hours": 8,
+      "completion": 80,
+      "deadline": "7 Nov",
+      "deadline_date": "2026-11-07",
+      "status": "In progress",
+      "priority": "Medium"
+    },
+    {
+      "id": "T08",
+      "task": "Grant application (community fund)",
+      "programme": "Fundraising",
+      "needed": 2,
+      "assigned": 1,
+      "volunteers": [
+        {
+          "id": "V07",
+          "hours": 7
+        }
+      ],
+      "est_hours": 20,
+      "logged_hours": 7,
+      "completion": 35,
+      "deadline": "14 Nov",
+      "deadline_date": "2026-11-14",
+      "status": "At risk",
+      "priority": "High"
+    },
+    {
+      "id": "T09",
+      "task": "Fix website donation page",
+      "programme": "IT",
+      "needed": 1,
+      "assigned": 1,
+      "volunteers": [
+        {
+          "id": "V15",
+          "hours": 3
+        }
+      ],
+      "est_hours": 6,
+      "logged_hours": 3,
+      "completion": 50,
+      "deadline": "15 Nov",
+      "deadline_date": "2026-11-15",
+      "status": "In progress",
+      "priority": "Low"
+    },
+    {
+      "id": "T10",
+      "task": "Food hygiene training for new volunteers",
+      "programme": "Training",
+      "needed": 1,
+      "assigned": 1,
+      "volunteers": [
+        {
+          "id": "V01",
+          "hours": 12
+        }
+      ],
+      "est_hours": 12,
+      "logged_hours": 12,
+      "completion": 100,
+      "deadline": "20 Oct",
+      "deadline_date": "2026-10-20",
+      "status": "Done",
+      "priority": "Medium"
+    },
+    {
+      "id": "T11",
+      "task": "Winter coat drive",
+      "programme": "Events",
+      "needed": 3,
+      "assigned": 0,
+      "volunteers": [],
+      "est_hours": 25,
+      "logged_hours": 0,
+      "completion": 0,
+      "deadline": "20 Nov",
+      "deadline_date": "2026-11-20",
+      "status": "Not started",
+      "priority": "Medium"
+    }
+  ],
+  "monthly": [
+    {
+      "month": "June",
+      "families": 142,
+      "parcels": 410,
+      "deliveries": 96,
+      "active_volunteers": 13,
+      "hours": 260,
+      "no_shows": 3,
+      "donations": 4200
+    },
+    {
+      "month": "July",
+      "families": 150,
+      "parcels": 432,
+      "deliveries": 101,
+      "active_volunteers": 13,
+      "hours": 238,
+      "no_shows": 5,
+      "donations": 3850
+    },
+    {
+      "month": "August",
+      "families": 161,
+      "parcels": 455,
+      "deliveries": 110,
+      "active_volunteers": 12,
+      "hours": 205,
+      "no_shows": 7,
+      "donations": 3100
+    },
+    {
+      "month": "September",
+      "families": 174,
+      "parcels": 489,
+      "deliveries": 118,
+      "active_volunteers": 11,
+      "hours": 198,
+      "no_shows": 6,
+      "donations": 3600
+    },
+    {
+      "month": "October",
+      "families": 188,
+      "parcels": 521,
+      "deliveries": 124,
+      "active_volunteers": 13,
+      "hours": 190,
+      "no_shows": 9,
+      "donations": 3950
+    }
+  ],
+  "donations_october": [
+    {
+      "source": "One-off gifts from individuals",
+      "amount": 1450
+    },
+    {
+      "source": "Monthly direct debits",
+      "amount": 980
+    },
+    {
+      "source": "Supermarket partner",
+      "amount": 800
+    },
+    {
+      "source": "Church collection",
+      "amount": 420
+    },
+    {
+      "source": "Online donation page",
+      "amount": 300
+    }
+  ],
+  "noshows": [
+    {
+      "date": "3 Oct",
+      "date_iso": "2026-10-03",
+      "volunteer_id": "V08",
+      "volunteer": "Liam O'Connor",
+      "shift": "Warehouse",
+      "task_id": "T03",
+      "notice": "None"
+    },
+    {
+      "date": "4 Oct",
+      "date_iso": "2026-10-04",
+      "volunteer_id": "V02",
+      "volunteer": "Tom Briggs",
+      "shift": "Deliveries",
+      "task_id": "T02",
+      "notice": "1 hour"
+    },
+    {
+      "date": "9 Oct",
+      "date_iso": "2026-10-09",
+      "volunteer_id": "V11",
+      "volunteer": "Chloe Evans",
+      "shift": "Homework club",
+      "task_id": "T04",
+      "notice": "None"
+    },
+    {
+      "date": "11 Oct",
+      "date_iso": "2026-10-11",
+      "volunteer_id": "V02",
+      "volunteer": "Tom Briggs",
+      "shift": "Deliveries",
+      "task_id": "T02",
+      "notice": "None"
+    },
+    {
+      "date": "14 Oct",
+      "date_iso": "2026-10-14",
+      "volunteer_id": "V05",
+      "volunteer": "Sophie Martin",
+      "shift": "Fundraising stall",
+      "task_id": "T06",
+      "notice": "Same day"
+    },
+    {
+      "date": "17 Oct",
+      "date_iso": "2026-10-17",
+      "volunteer_id": "V08",
+      "volunteer": "Liam O'Connor",
+      "shift": "Warehouse",
+      "task_id": "T03",
+      "notice": "None"
+    },
+    {
+      "date": "25 Oct",
+      "date_iso": "2026-10-25",
+      "volunteer_id": "V13",
+      "volunteer": "Hana Kim",
+      "shift": "Befriending",
+      "task_id": "T05",
+      "notice": "None"
+    },
+    {
+      "date": "26 Oct",
+      "date_iso": "2026-10-26",
+      "volunteer_id": "V11",
+      "volunteer": "Chloe Evans",
+      "shift": "Homework club",
+      "task_id": "T04",
+      "notice": "None"
+    },
+    {
+      "date": "28 Oct",
+      "date_iso": "2026-10-28",
+      "volunteer_id": "V04",
+      "volunteer": "Daniel Okafor",
+      "shift": "Parcel packing",
+      "task_id": "T01",
+      "notice": "Same day"
+    }
+  ],
+  "staff_notes": [
+    "23 households are on the waiting list for home deliveries.",
+    "Drivers have asked for delivery routes to be planned before their shift.",
+    "The homework club turned away 6 children in October because there weren't enough tutors.",
+    "New volunteers still sign up on paper forms, which take about a week to type up.",
+    "The online donation page has a broken button on mobile phones.",
+    "The board meets on 12 November and wants a clear picture of volunteer capacity."
+  ]
+}
