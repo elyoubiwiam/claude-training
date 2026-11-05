@@ -269,6 +269,116 @@ export function volunteersNeeded({ targetPerFamily, families, baseHours, hoursEa
 }
 
 // ---------------------------------------------------------------------------
+// Capacity & risk KPIs
+
+/** Share of estimated task hours actually logged, across all tasks. Null with no tasks. */
+export function capacityRate(tasks) {
+  const estTotal = sum(tasks, (t) => t.est_hours);
+  if (!estTotal) return null;
+  return (sum(tasks, (t) => t.logged_hours) / estTotal) * 100;
+}
+
+/** How much of all logged hours the busiest `topN` volunteers carry between them. */
+export function volunteerConcentration(volunteers, topN = 3) {
+  const working = volunteers.filter((v) => v.hours > 0).sort((a, b) => b.hours - a.hours);
+  const total = sum(working, (v) => v.hours);
+  const top = working.slice(0, topN);
+  const topHours = sum(top, (v) => v.hours);
+  return { topN: top, topHours, total, share: total ? (topHours / total) * 100 : null };
+}
+
+/** No-shows per active volunteer, by month — comparable across months unlike a raw count. */
+export function noShowRate(monthly) {
+  return monthly.map((m) => ({
+    month: m.month,
+    rate: m.active_volunteers ? (m.no_shows / m.active_volunteers) * 100 : null,
+  }));
+}
+
+/**
+ * What needs attention this month: computed risk flags first (high, then medium),
+ * followed by the staff notes as-is. Each item is { severity: 'high'|'medium'|'info', text }.
+ */
+export function insights(data, todayIso) {
+  const items = [];
+
+  const cap = capacityRate(data.tasks);
+  if (cap != null && cap < 60) {
+    items.push({
+      severity: 'high',
+      text: `Only ${Math.round(cap)}% of estimated task hours have been logged across all tasks — most are behind pace.`,
+    });
+  }
+
+  const tracker = taskTracker(data.tasks, data.volunteers, todayIso);
+  const overdueHigh = tracker.filter((t) => t.status === 'Overdue' && t.priority === 'High');
+  if (overdueHigh.length) {
+    items.push({
+      severity: 'high',
+      text: `${overdueHigh.length} high-priority task${overdueHigh.length === 1 ? ' is' : 's are'} overdue: ${overdueHigh.map((t) => t.task).join(', ')}.`,
+    });
+  }
+
+  const conc = volunteerConcentration(data.volunteers, 3);
+  if (conc.share != null && conc.share >= 40) {
+    items.push({
+      severity: 'medium',
+      text: `The top 3 volunteers (${conc.topN.map((v) => v.name).join(', ')}) carry ${Math.round(conc.share)}% of all logged hours — losing one would hurt capacity.`,
+    });
+  }
+
+  const rates = noShowRate(data.monthly);
+  const first = rates[0];
+  const last = rates[rates.length - 1];
+  if (first?.rate != null && last?.rate != null && last.rate > first.rate * 1.5 && last.rate - first.rate > 5) {
+    items.push({
+      severity: 'medium',
+      text: `No-shows per volunteer have risen from ${Math.round(first.rate)}% in ${first.month} to ${Math.round(last.rate)}% in ${last.month}.`,
+    });
+  }
+
+  const gapsById = new Map(taskGaps(data.tasks).rows.map((r) => [r.id, r]));
+  const soonGaps = tracker.filter((t) => t.daysLeft >= 0 && t.daysLeft <= 14 && (gapsById.get(t.id)?.gap || 0) > 0);
+  if (soonGaps.length) {
+    items.push({
+      severity: 'medium',
+      text: `${soonGaps.length} task${soonGaps.length === 1 ? '' : 's'} due within two weeks still need${soonGaps.length === 1 ? 's' : ''} more volunteers: ${soonGaps.map((t) => t.task).join(', ')}.`,
+    });
+  }
+
+  for (const note of data.staff_notes || []) items.push({ severity: 'info', text: note });
+
+  const rank = { high: 0, medium: 1, info: 2 };
+  return items.sort((a, b) => rank[a.severity] - rank[b.severity]);
+}
+
+/** A short, plain-text summary ready to paste into an email or slide. */
+export function boardSummary(data, todayIso) {
+  const h = headlineFigures(data);
+  const gaps = taskGaps(data.tasks);
+  const cap = capacityRate(data.tasks);
+  const conc = volunteerConcentration(data.volunteers, 3);
+  return [
+    `${data.charity} — volunteer capacity summary (${data.period})`,
+    '',
+    `Families helped: ${Math.round(h.families)} in ${h.month} (${fmtSigned(h.familiesChange)}% vs ${h.baseMonth})`,
+    `Volunteer hours: ${Math.round(h.hours)}h in ${h.month} (${fmtSigned(h.hoursChange)}% vs ${h.baseMonth})`,
+    `Hours per family: ${h.hoursPerFamily.toFixed(1)}h, vs ${h.baseHoursPerFamily.toFixed(1)}h in ${h.baseMonth}`,
+    `Volunteer places: ${gaps.totals.assigned} of ${gaps.totals.needed} filled, ${gaps.totals.gap} still needed`,
+    cap != null ? `Task hours delivered: ${Math.round(cap)}% of estimate` : null,
+    conc.share != null ? `Top 3 volunteers carry ${Math.round(conc.share)}% of all hours` : null,
+    `Donations: £${Math.round(h.donations)} in ${h.month} (${fmtSigned(h.donationsChange)}% vs ${h.baseMonth})`,
+    `No-shows: ${h.noShows} in ${h.month}`,
+    '',
+    `As of ${todayIso}.`,
+  ].filter((line) => line != null).join('\n');
+}
+
+function fmtSigned(n) {
+  return n == null ? '—' : `${n >= 0 ? '+' : ''}${n.toFixed(0)}`;
+}
+
+// ---------------------------------------------------------------------------
 // Data checks: everything that should agree in the data file. Returns a list of problems.
 
 const AVAILABLE_DAYS = {

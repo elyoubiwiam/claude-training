@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs';
 import {
   sum, pctChange, hoursPerFamily, daysBetween, isoDate, monthlyTrend, taskGaps, taskStatus,
   taskTracker, filterTasks, donationSummary, noShowSummary, headlineFigures, plannerDefaults,
-  planScenario, volunteersNeeded, dataIssues,
+  planScenario, volunteersNeeded, dataIssues, capacityRate, volunteerConcentration, noShowRate,
+  insights, boardSummary,
 } from './calc.js';
 
 const data = JSON.parse(readFileSync(new URL('./northside-data.json', import.meta.url), 'utf8'));
@@ -205,6 +206,57 @@ test('volunteersNeeded handles an exact fit, a target already met, and zero hour
   assert.equal(volunteersNeeded({ targetPerFamily: 2, families: 100, baseHours: 180, hoursEach: 10 }), 2);
   assert.equal(volunteersNeeded({ targetPerFamily: 1, families: 100, baseHours: 180, hoursEach: 10 }), 0);
   assert.equal(volunteersNeeded({ targetPerFamily: 2, families: 100, baseHours: 180, hoursEach: 0 }), null);
+});
+
+// --- capacity & risk KPIs -------------------------------------------------------
+
+test('capacityRate is logged hours over estimated hours across all tasks', () => {
+  close(capacityRate(data.tasks), 42.04, 1);
+  assert.equal(capacityRate([]), null);
+});
+
+test('volunteerConcentration ranks the busiest volunteers and their share', () => {
+  const conc = volunteerConcentration(data.volunteers, 3);
+  assert.deepEqual(conc.topN.map((v) => v.id), ['V01', 'V14', 'V04']);
+  assert.equal(conc.topHours, 84);
+  assert.equal(conc.total, 190);
+  close(conc.share, 44.21, 1);
+  assert.equal(volunteerConcentration([], 3).share, null);
+});
+
+test('noShowRate is no-shows per active volunteer, by month', () => {
+  const rates = noShowRate(data.monthly);
+  close(rates[0].rate, 23.08, 1);
+  close(rates[rates.length - 1].rate, 69.23, 1);
+});
+
+test('insights flags computed risks before staff notes, worst first', () => {
+  const items = insights(data, data.as_of);
+  assert.equal(items.filter((i) => i.severity === 'high').length, 2);
+  assert.equal(items.filter((i) => i.severity === 'medium').length, 3);
+  assert.deepEqual(items.filter((i) => i.severity === 'info').map((i) => i.text), data.staff_notes);
+  assert.ok(items[0].severity === 'high');
+  assert.ok(items.some((i) => i.text.includes('Weekly food parcel packing')));
+  assert.ok(items.some((i) => i.text.includes('top 3 volunteers')));
+  assert.ok(items.some((i) => i.text.includes('Grant application (community fund)')));
+});
+
+test('insights has no computed flags once the risks clear', () => {
+  const calm = structuredClone(data);
+  for (const t of calm.tasks) t.logged_hours = t.est_hours;
+  for (const v of calm.volunteers) v.hours = 12;
+  for (const m of calm.monthly) m.no_shows = 1;
+  const items = insights(calm, '2026-06-01');
+  assert.equal(items.filter((i) => i.severity !== 'info').length, 0);
+});
+
+test('boardSummary includes the headline figures as plain text', () => {
+  const text = boardSummary(data, data.as_of);
+  assert.ok(text.startsWith('Northside Community Hub'));
+  assert.ok(text.includes('Families helped: 188'));
+  assert.ok(text.includes('Hours per family: 1.0h'));
+  assert.ok(text.includes('Task hours delivered: 42%'));
+  assert.ok(text.includes('As of 2026-11-05.'));
 });
 
 // --- data checks --------------------------------------------------------------

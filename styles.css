@@ -14,8 +14,65 @@
   --series-4: #a855f7;
   --series-5: #c4332c;
   --series-6: #0891b2;
+  --bad-bg: #fdecea;
+  --warn-bg: #fff4e5;
+  --good-bg: #e6f6ec;
+  --accent-bg: #eef4ff;
+  --neutral-bg: #eef0f3;
   --radius: 10px;
   --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161b;
+    --card-bg: #1c1f26;
+    --text: #e6e8ec;
+    --text-muted: #9aa1ad;
+    --border: #2a2e37;
+    --accent: #5b9cf6;
+    --good: #3ddc84;
+    --warn: #e0954f;
+    --bad: #ef6b63;
+    --series-1: #5b9cf6;
+    --series-2: #e0954f;
+    --series-3: #3ddc84;
+    --series-4: #c084fc;
+    --series-5: #ef6b63;
+    --series-6: #22c3e6;
+    --bad-bg: #3a211f;
+    --warn-bg: #3a2c16;
+    --good-bg: #163a28;
+    --accent-bg: #16263f;
+    --neutral-bg: #262a31;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #14161b;
+  --card-bg: #1c1f26;
+  --text: #e6e8ec;
+  --text-muted: #9aa1ad;
+  --border: #2a2e37;
+  --accent: #5b9cf6;
+  --good: #3ddc84;
+  --warn: #e0954f;
+  --bad: #ef6b63;
+  --series-1: #5b9cf6;
+  --series-2: #e0954f;
+  --series-3: #3ddc84;
+  --series-4: #c084fc;
+  --series-5: #ef6b63;
+  --series-6: #22c3e6;
+  --bad-bg: #3a211f;
+  --warn-bg: #3a2c16;
+  --good-bg: #163a28;
+  --accent-bg: #16263f;
+  --neutral-bg: #262a31;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
 }
 
 * {
@@ -125,9 +182,9 @@ h3 {
 /* ---------- alerts ---------- */
 
 .alert {
-  background: #fff4e5;
-  border: 1px solid #f3c28a;
-  color: #7a4a00;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  color: var(--warn);
   border-radius: var(--radius);
   padding: 14px 16px;
   margin-bottom: 20px;
@@ -222,6 +279,71 @@ h3 {
   color: var(--text-muted);
 }
 
+.tile-warn {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+}
+
+/* ---------- needs attention / insights ---------- */
+
+.card-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-copy {
+  border: 1px solid var(--accent);
+  background: var(--card-bg);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+}
+
+.btn-copy:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.insights-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insight-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  border-left: 3px solid var(--border);
+  background: var(--bg);
+}
+
+.insight-high {
+  border-left-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.insight-medium {
+  border-left-color: var(--warn);
+  background: var(--warn-bg);
+}
+
+.insight-info {
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+}
+
 /* ---------- charts (shared) ---------- */
 
 .chart {
@@ -245,9 +367,10 @@ h3 {
 }
 
 .baseline {
-  stroke: #c7cad1;
+  stroke: var(--text-muted);
   stroke-width: 1;
   stroke-dasharray: 3 3;
+  opacity: 0.5;
 }
 
 .axis-text {
@@ -607,27 +730,27 @@ h3 {
 
 .status-overdue,
 .status-at-risk {
-  background: #fdecea;
+  background: var(--bad-bg);
   color: var(--bad);
 }
 
 .status-behind {
-  background: #fff4e5;
+  background: var(--warn-bg);
   color: var(--warn);
 }
 
 .status-in-progress {
-  background: #e8f0fe;
+  background: var(--accent-bg);
   color: var(--accent);
 }
 
 .status-not-started {
-  background: #eef0f3;
+  background: var(--neutral-bg);
   color: var(--text-muted);
 }
 
 .status-done {
-  background: #e6f6ec;
+  background: var(--good-bg);
   color: var(--good);
 }
 

@@ -1,7 +1,8 @@
 import {
   pctChange, monthlyTrend, taskGaps, taskTracker, filterTasks,
   donationSummary, noShowSummary, headlineFigures, plannerDefaults, planScenario,
-  volunteersNeeded, dataIssues, STATUS_ORDER,
+  volunteersNeeded, dataIssues, STATUS_ORDER, capacityRate, volunteerConcentration,
+  noShowRate, insights, boardSummary,
 } from './calc.js';
 import { lineChart, columnChart, hBars, tableView } from './charts.js';
 
@@ -113,19 +114,39 @@ function renderHeadline(data) {
   hero.append(heroLabel, heroValue, heroDelta);
 
   const activeChange = pctChange(h.baseActiveVolunteers, h.activeVolunteers);
+  const cap = capacityRate(data.tasks);
+  const conc = volunteerConcentration(data.volunteers, 3);
+  const rates = noShowRate(data.monthly);
+  const lastRate = rates[rates.length - 1]?.rate ?? null;
+  const firstRate = rates[0]?.rate ?? null;
+  const rateDelta = lastRate != null && firstRate != null ? lastRate - firstRate : null;
+
   const tiles = [
-    { label: `Families helped — ${h.month}`, value: fmtInt(h.families), delta: h.familiesChange },
-    { label: `Volunteer hours — ${h.month}`, value: fmtHours(h.hours, 0), delta: h.hoursChange },
-    { label: 'Active volunteers', value: fmtInt(h.activeVolunteers), delta: activeChange },
-    { label: `Donations — ${h.month}`, value: fmtMoney(h.donations), delta: h.donationsChange },
-    { label: `No-shows — ${h.month}`, value: fmtInt(h.noShows), delta: pctChange(h.baseNoShows, h.noShows), invert: true },
-    { label: 'Volunteer places unfilled', value: `${h.placesUnfilled}/${h.placesNeeded}`, delta: null },
+    { label: `Families helped — ${h.month}`, value: fmtInt(h.families), delta: h.familiesChange, deltaText: `${fmtPct(h.familiesChange)} since ${h.baseMonth}` },
+    { label: `Volunteer hours — ${h.month}`, value: fmtHours(h.hours, 0), delta: h.hoursChange, deltaText: `${fmtPct(h.hoursChange)} since ${h.baseMonth}` },
+    { label: 'Active volunteers', value: fmtInt(h.activeVolunteers), delta: activeChange, deltaText: `${fmtPct(activeChange)} since ${h.baseMonth}` },
+    {
+      label: 'Task hours delivered', value: cap == null ? '—' : `${cap.toFixed(0)}%`,
+      warn: cap != null && cap < 60, deltaText: 'of estimated hours, all open tasks',
+    },
+    { label: `Donations — ${h.month}`, value: fmtMoney(h.donations), delta: h.donationsChange, deltaText: `${fmtPct(h.donationsChange)} since ${h.baseMonth}` },
+    {
+      label: `No-shows per volunteer — ${h.month}`, value: lastRate == null ? '—' : `${lastRate.toFixed(0)}%`,
+      delta: rateDelta, invert: true, warn: rateDelta != null && rateDelta > 5,
+      deltaText: rateDelta == null ? '—' : `${rateDelta >= 0 ? '+' : ''}${rateDelta.toFixed(0)}pp since ${h.baseMonth}`,
+    },
+    {
+      label: 'Hours from top 3 volunteers', value: conc.share == null ? '—' : `${conc.share.toFixed(0)}%`,
+      warn: conc.share != null && conc.share >= 40,
+      deltaText: conc.topN.length ? conc.topN.map((v) => v.name.split(' ')[0]).join(', ') : '—',
+    },
+    { label: 'Volunteer places unfilled', value: `${h.placesUnfilled}/${h.placesNeeded}`, deltaText: 'across all open tasks' },
   ];
   const tilesEl = $('#tiles');
   tilesEl.replaceChildren();
   for (const t of tiles) {
     const card = document.createElement('div');
-    card.className = 'tile';
+    card.className = `tile${t.warn ? ' tile-warn' : ''}`;
     const l = document.createElement('div');
     l.className = 'tile-label';
     l.textContent = t.label;
@@ -133,14 +154,62 @@ function renderHeadline(data) {
     v.className = 'tile-value';
     v.textContent = t.value;
     card.append(l, v);
-    if (t.delta != null) {
+    if (t.deltaText) {
       const d = document.createElement('div');
       d.className = `tile-delta ${deltaClass(t.delta, t.invert)}`;
-      d.textContent = `${fmtPct(t.delta)} since ${h.baseMonth}`;
+      d.textContent = t.deltaText;
       card.append(d);
     }
     tilesEl.append(card);
   }
+}
+
+// ---------------------------------------------------------------------------
+// needs attention
+
+function renderInsights(data) {
+  const items = insights(data, data.as_of);
+  const list = $('#insights-list');
+  list.replaceChildren();
+  if (!items.length) {
+    const li = document.createElement('li');
+    li.className = 'insight-item insight-info';
+    li.textContent = 'Nothing flagged this month.';
+    list.append(li);
+  }
+  for (const item of items) {
+    const li = document.createElement('li');
+    li.className = `insight-item insight-${item.severity}`;
+    li.textContent = item.text;
+    list.append(li);
+  }
+
+  const btn = $('#copy-summary');
+  btn.addEventListener('click', async () => {
+    const text = boardSummary(data, data.as_of);
+    const original = btn.textContent;
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.append(ta);
+        ta.select();
+        copied = document.execCommand('copy');
+        ta.remove();
+      } catch {
+        copied = false;
+      }
+    }
+    btn.textContent = copied ? 'Copied!' : 'Could not copy — see console';
+    if (!copied) console.info(`Board summary:\n${text}`);
+    setTimeout(() => { btn.textContent = original; }, 1800);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -451,6 +520,7 @@ async function init() {
     renderMeta(data);
     renderDataIssues(data);
     renderHeadline(data);
+    renderInsights(data);
     renderDemand(data);
     renderGaps(data);
     setupPlanner(data);
